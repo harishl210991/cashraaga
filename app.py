@@ -14,14 +14,15 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Base */
+    /* Base – dark minimal */
     .stApp {
-        background-color: #f5f5f7;
-        color: #111827;
+        background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 100%);
+        color: #e5e7eb;
     }
+
     [data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid #e5e7eb;
+        background-color: #020617;
+        border-right: 1px solid #111827;
     }
 
     /* Top bar */
@@ -32,6 +33,7 @@ st.markdown(
         display: flex;
         align-items: center;
         justify-content: space-between;
+        color: #e5e7eb;
     }
     .cr-left {
         display: flex;
@@ -42,30 +44,31 @@ st.markdown(
         width: 30px;
         height: 30px;
         border-radius: 10px;
-        background: #16a34a15;
-        border: 1px solid #16a34a40;
+        background: rgba(34,197,94,0.10);
+        border: 1px solid rgba(34,197,94,0.55);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        color: #16a34a;
+        color: #4ade80;
         font-size: 16px;
     }
     .cr-title {
         font-weight: 700;
         font-size: 1.05rem;
+        color: #f9fafb;
     }
     .cr-tagline {
         font-size: 0.8rem;
-        color: #6b7280;
+        color: #9ca3af;
     }
     .cr-chip {
         font-size: 0.75rem;
         padding: 4px 9px;
         border-radius: 999px;
-        border: 1px solid #e5e7eb;
-        background-color: #ffffff;
-        color: #4b5563;
+        border: 1px solid #1f2937;
+        background-color: #020617;
+        color: #9ca3af;
     }
 
     /* Content wrapper */
@@ -79,41 +82,111 @@ st.markdown(
         font-size: 0.95rem;
         font-weight: 600;
         margin-bottom: 0.15rem;
+        color: #e5e7eb;
     }
     .cr-section-sub {
         font-size: 0.8rem;
-        color: #6b7280;
+        color: #9ca3af;
         margin-bottom: 0.4rem;
     }
 
-    /* Card look */
+    /* Generic card */
     .cr-card {
-        background-color: #ffffff;
+        background-color: #020617;
         border-radius: 12px;
-        border: 1px solid #e5e7eb;
+        border: 1px solid #1f2937;
         padding: 14px 16px;
     }
 
-    /* Metrics */
+    /* Snapshot card styles */
+    .snapshot-wrapper {
+        background: radial-gradient(circle at top left, #022c22 0, #020617 60%, #020617 100%);
+        border-radius: 22px;
+        border: 1px solid #022c22;
+        padding: 18px 18px 20px 18px;
+        box-shadow: 0 24px 50px rgba(15,23,42,0.9);
+        margin-bottom: 12px;
+    }
+    .snapshot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .snapshot-title {
+        font-size: 0.98rem;
+        font-weight: 600;
+        color: #f9fafb;
+    }
+    .snapshot-pill {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.4);
+        color: #e5e7eb;
+        background: rgba(15,23,42,0.7);
+    }
+    .snapshot-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .snapshot-card {
+        border-radius: 16px;
+        padding: 10px 12px 12px 12px;
+        background: radial-gradient(circle at top left, #22c55e30, #022c22 60%, #020617 100%);
+        border: 1px solid rgba(34,197,94,0.55);
+    }
+    .snapshot-label {
+        font-size: 0.78rem;
+        color: #a5b4fc;
+        margin-bottom: 2px;
+    }
+    .snapshot-value {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #f9fafb;
+    }
+    .snapshot-subtext {
+        font-size: 0.75rem;
+        color: #cbd5f5;
+    }
+    .snapshot-ai {
+        margin-top: 6px;
+        margin-bottom: 8px;
+        font-size: 0.78rem;
+        color: #e5e7eb;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(15,23,42,0.9);
+        border: 1px solid #1f2937;
+    }
+    .snapshot-ai span {
+        color: #4ade80;
+    }
+
+    /* Metrics (if used elsewhere) */
     .metric-card > div {
         border-radius: 10px !important;
-        border: 1px solid #e5e7eb !important;
-        background-color: #ffffff !important;
+        border: 1px solid #1f2937 !important;
+        background-color: #020617 !important;
         padding: 10px 12px !important;
     }
 
     .small-note {
         font-size: 0.78rem;
-        color: #6b7280;
+        color: #9ca3af;
     }
 
-    /* Tabs tighter */
+    /* Tabs */
     .stTabs [role="tablist"] > div {
         gap: 6px;
     }
     .stTabs [role="tab"] {
         padding: 4px 10px;
         font-size: 0.85rem;
+        color: #e5e7eb;
     }
     </style>
     """,
@@ -137,15 +210,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Outer wrapper
 st.markdown('<div class="cr-wrapper">', unsafe_allow_html=True)
 
 # ---------- SIDEBAR ----------
 with st.sidebar:
     st.markdown("#### 💰 CashRaaga")
     st.caption("Bank statement → UPI, EMI & savings insights.")
-
     st.markdown("---")
     st.markdown("**Upload your statement**")
+
     uploaded_file = st.file_uploader(
         "CSV / Excel from your bank",
         type=["csv", "xlsx", "xls"],
@@ -153,9 +227,9 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.caption("Files are processed in-memory. You can close the tab any time.")
+    st.caption("Files are processed in-memory. Close the tab to clear them.")
 
-# ---------- HERO TEXT ----------
+# ---------- HERO CARD ----------
 st.markdown(
     """
     <div class="cr-card" style="margin-bottom:10px;">
@@ -208,7 +282,9 @@ with col2:
 with col3:
     amount_col = st.selectbox("Amount column", options=columns)
 
-use_type_col = st.checkbox("My statement has a separate Credit / Debit type column", value=False)
+use_type_col = st.checkbox(
+    "My statement has a separate Credit / Debit type column", value=False
+)
 type_col = None
 type_value_credit = None
 type_value_debit = None
@@ -239,7 +315,6 @@ if use_type_col and type_col is not None:
     debit_flag = tseries == type_value_debit.strip().upper()
 
     if df["Amount"].min() >= 0:
-        # amounts all positive → use type to assign sign
         df["SignedAmount"] = 0.0
         df.loc[credit_flag, "SignedAmount"] = df.loc[credit_flag, "Amount"]
         df.loc[debit_flag, "SignedAmount"] = -df.loc[debit_flag, "Amount"]
@@ -286,15 +361,18 @@ def categorize(description: str) -> str:
 
 df["Category"] = df["Description"].apply(categorize)
 
-# aggregates
+# ---------- AGGREGATES ----------
 total_inflow = df.loc[df["SignedAmount"] > 0, "SignedAmount"].sum()
 total_outflow = df.loc[df["SignedAmount"] < 0, "SignedAmount"].sum()
 savings_total = total_inflow + total_outflow
 
-# monthly series
+# Month column for all further grouping
 df["Month"] = df["Date"].dt.strftime("%Y-%m")
+
 monthly_inflow = df[df["SignedAmount"] > 0].groupby("Month")["SignedAmount"].sum()
-monthly_outflow = df[df["SignedAmount"] < 0].groupby("Month")["SignedAmount"].sum().abs()
+monthly_outflow = (
+    df[df["SignedAmount"] < 0].groupby("Month")["SignedAmount"].sum().abs()
+)
 
 all_months = sorted(set(monthly_inflow.index) | set(monthly_outflow.index))
 monthly_inflow = monthly_inflow.reindex(all_months, fill_value=0)
@@ -311,6 +389,11 @@ monthly_df = pd.DataFrame(
 )
 monthly_series = monthly_df.set_index("Month")["Savings"]
 
+# Common views for UPI & EMI
+upi_df = df[df["Description"].str.contains("UPI", case=False, na=False)].copy()
+emi_mask = df["Description"].str.contains("EMI|LOAN", case=False, na=False)
+emi_df = df[(df["SignedAmount"] < 0) & emi_mask].copy()
+
 # ---------- TABS ----------
 tab_dash, tab_upi, tab_emi, tab_predict, tab_export = st.tabs(
     ["Overview", "UPI flows", "Loans / EMIs", "Savings forecast", "Download"]
@@ -318,56 +401,138 @@ tab_dash, tab_upi, tab_emi, tab_predict, tab_export = st.tabs(
 
 # ===== OVERVIEW TAB =====
 with tab_dash:
-    st.markdown('<div class="cr-section-title">Summary</div>', unsafe_allow_html=True)
+    # --- derive monthly numbers for snapshot ---
+    if len(monthly_df) > 0:
+        current_row = monthly_df.iloc[-1]
+        current_month_label = current_row["Month"]
+        this_savings = float(current_row["Savings"])
+        prev_savings = float(monthly_df.iloc[-2]["Savings"]) if len(monthly_df) > 1 else None
+
+        if prev_savings is not None and prev_savings != 0:
+            growth_pct = (this_savings - prev_savings) / abs(prev_savings) * 100
+            growth_txt = f"{growth_pct:+.0f}% vs last month"
+        else:
+            growth_txt = "first month in data"
+
+        # UPI net outflow (current month)
+        if not upi_df.empty:
+            upi_current = upi_df[upi_df["Month"] == current_month_label]
+            upi_net = upi_current["SignedAmount"].sum()
+            upi_net_out = abs(upi_net) if upi_net < 0 else 0
+        else:
+            upi_net_out = 0
+
+        # EMI load (current month)
+        if not emi_df.empty:
+            emi_current = emi_df[emi_df["Month"] == current_month_label]
+            emi_load = abs(emi_current["SignedAmount"].sum()) if not emi_current.empty else 0
+        else:
+            emi_load = 0
+
+        safe_daily = max(this_savings, 0) / 30 if this_savings > 0 else 0
+    else:
+        this_savings = 0
+        growth_txt = "no history"
+        upi_net_out = 0
+        emi_load = 0
+        safe_daily = 0
+        current_month_label = ""
+
+    # --- snapshot UI ---
     st.markdown(
-        '<div class="cr-section-sub">High-level view of how much came in, went out, and what you saved.</div>',
+        f"""
+        <div class="snapshot-wrapper">
+          <div class="snapshot-header">
+            <div class="snapshot-title">Monthly savings snapshot</div>
+            <div class="snapshot-pill">Demo view</div>
+          </div>
+
+          <div class="snapshot-cards">
+            <div class="snapshot-card">
+              <div class="snapshot-label">This month savings</div>
+              <div class="snapshot-value">₹{this_savings:,.0f}</div>
+              <div class="snapshot-subtext">{growth_txt}</div>
+            </div>
+
+            <div class="snapshot-card">
+              <div class="snapshot-label">UPI net outflow</div>
+              <div class="snapshot-value">₹{upi_net_out:,.0f}</div>
+              <div class="snapshot-subtext">Top UPI spends: Swiggy · Amazon · Rent</div>
+            </div>
+
+            <div class="snapshot-card">
+              <div class="snapshot-label">EMI load</div>
+              <div class="snapshot-value">₹{emi_load:,.0f}</div>
+              <div class="snapshot-subtext">Current month EMIs and loans</div>
+            </div>
+          </div>
+
+          <div class="snapshot-ai">
+            AI view: <span>you can safely spend ~₹{safe_daily:,.0f}/day for the next 30 days</span>
+            &nbsp;based on this month’s savings.
+          </div>
+        """,
         unsafe_allow_html=True,
     )
 
-    m1, m2, m3 = st.columns(3)
-    with m1:
-        st.metric("Total inflow (₹)", f"{total_inflow:,.0f}")
-    with m2:
-        st.metric("Total outflow (₹)", f"{abs(total_outflow):,.0f}")
-    with m3:
-        st.metric("Savings in period (₹)", f"{savings_total:,.0f}")
+    # --- Savings bar chart: last few months ---
+    last_n = 4
+    snapshot_hist = monthly_df.tail(last_n).copy()
+    if not snapshot_hist.empty:
+        fig_hist = go.Figure()
+        fig_hist.add_bar(
+            x=snapshot_hist["Month"],
+            y=snapshot_hist["Savings"],
+            marker=dict(
+                color="#22c55e",
+                line=dict(color="#15803d", width=1),
+            ),
+        )
+        fig_hist.update_layout(
+            height=240,
+            margin=dict(l=10, r=10, t=10, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(15,23,42,1)",
+            xaxis=dict(
+                showgrid=False,
+                zeroline=False,
+                title="",
+                tickfont=dict(color="#9ca3af"),
+            ),
+            yaxis=dict(
+                showgrid=True,
+                gridcolor="#0f172a",
+                zeroline=False,
+                title="",
+                tickfont=dict(color="#9ca3af"),
+            ),
+        )
 
-    st.markdown("")
-    st.markdown('<div class="cr-section-title">Recent transactions</div>', unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="font-size:0.8rem;color:#9ca3af;margin-top:2px;margin-bottom:4px;">
+              Savings Raaga · last few months
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        st.plotly_chart(fig_hist, use_container_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)  # closes snapshot-wrapper
+
+    # Compact recent transactions table
+    st.markdown(
+        '<div class="cr-section-title" style="margin-top:10px;">Recent transactions</div>',
+        unsafe_allow_html=True,
+    )
     st.caption("Last 10 rows after cleaning.")
     st.dataframe(df.sort_values("Date", ascending=False).head(10), use_container_width=True)
-
-    st.markdown("")
-    st.markdown('<div class="cr-section-title">Spending by category</div>', unsafe_allow_html=True)
-    debits = df[df["SignedAmount"] < 0].copy()
-    spend_by_cat = debits.groupby("Category")["SignedAmount"].sum().sort_values()
-    if spend_by_cat.empty:
-        st.info("No debit transactions detected with current mapping.")
-    else:
-        spend_display = spend_by_cat.abs().reset_index()
-        spend_display.columns = ["Category", "Total Spent"]
-
-        col_chart, col_table = st.columns([2, 1.3])
-        with col_chart:
-            fig_cat = px.pie(
-                spend_display,
-                names="Category",
-                values="Total Spent",
-                hole=0.45,
-            )
-            st.plotly_chart(fig_cat, use_container_width=True)
-        with col_table:
-            st.dataframe(
-                spend_display.rename(columns={"Total Spent": "Total Spent (₹)"}),
-                use_container_width=True,
-            )
 
 # ===== UPI TAB =====
 with tab_upi:
     st.markdown('<div class="cr-section-title">UPI money movement</div>', unsafe_allow_html=True)
     st.caption("Based on descriptions containing 'UPI'.")
 
-    upi_df = df[df["Description"].str.contains("UPI", case=False, na=False)].copy()
     if upi_df.empty:
         st.info("No UPI transactions detected.")
     else:
@@ -410,9 +575,6 @@ with tab_upi:
 with tab_emi:
     st.markdown('<div class="cr-section-title">Loans & EMIs</div>', unsafe_allow_html=True)
     st.caption("Finds debits with 'EMI' or 'LOAN' in the description.")
-
-    emi_mask = df["Description"].str.contains("EMI|LOAN", case=False, na=False)
-    emi_df = df[(df["SignedAmount"] < 0) & emi_mask].copy()
 
     if emi_df.empty:
         st.info("No EMI / loan transactions found.")
@@ -515,12 +677,20 @@ with tab_predict:
                         name="Forecast",
                     )
                 )
-                fig_forecast.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+                fig_forecast.update_layout(
+                    margin=dict(l=0, r=0, t=30, b=0),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(15,23,42,1)",
+                    xaxis=dict(tickfont=dict(color="#9ca3af")),
+                    yaxis=dict(gridcolor="#0f172a", tickfont=dict(color="#9ca3af")),
+                )
                 st.plotly_chart(fig_forecast, use_container_width=True)
 
             with col_table:
                 st.dataframe(
-                    forecast_df.rename(columns={"Predicted Savings": "Predicted Savings (₹)"}),
+                    forecast_df.rename(
+                        columns={"Predicted Savings": "Predicted Savings (₹)"}
+                    ),
                     use_container_width=True,
                 )
         except Exception as e:
@@ -572,4 +742,5 @@ with tab_export:
         unsafe_allow_html=True,
     )
 
+# Close outer wrapper
 st.markdown("</div>", unsafe_allow_html=True)
