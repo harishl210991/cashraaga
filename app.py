@@ -95,46 +95,38 @@ st.markdown(
         background-color: #020617;
         border-radius: 12px;
         border: 1px solid #1f2937;
-        padding: 14px 16px;
+        padding: 12px 14px;
     }
 
     /* Snapshot card styles */
     .snapshot-wrapper {
-        background: radial-gradient(circle at top left, #022c22 0, #020617 60%, #020617 100%);
-        border-radius: 22px;
+        background: radial-gradient(circle at top left, #022c22 0, #020617 55%, #020617 100%);
+        border-radius: 18px;
         border: 1px solid #022c22;
-        padding: 18px 18px 20px 18px;
-        box-shadow: 0 24px 50px rgba(15,23,42,0.9);
-        margin-bottom: 12px;
+        padding: 14px 16px;
+        box-shadow: 0 22px 46px rgba(15,23,42,0.9);
+        margin-bottom: 10px;
     }
     .snapshot-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
     }
     .snapshot-title {
         font-size: 0.98rem;
         font-weight: 600;
         color: #f9fafb;
     }
-    .snapshot-pill {
-        font-size: 0.75rem;
-        padding: 4px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(148,163,184,0.4);
-        color: #e5e7eb;
-        background: rgba(15,23,42,0.7);
-    }
     .snapshot-cards {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
     .snapshot-card {
-        border-radius: 16px;
-        padding: 10px 12px 12px 12px;
+        border-radius: 14px;
+        padding: 8px 10px 10px 10px;
         background: radial-gradient(circle at top left, #22c55e30, #022c22 60%, #020617 100%);
         border: 1px solid rgba(34,197,94,0.55);
     }
@@ -153,8 +145,8 @@ st.markdown(
         color: #cbd5f5;
     }
     .snapshot-ai {
-        margin-top: 6px;
-        margin-bottom: 8px;
+        margin-top: 4px;
+        margin-bottom: 4px;
         font-size: 0.78rem;
         color: #e5e7eb;
         padding: 6px 10px;
@@ -166,7 +158,7 @@ st.markdown(
         color: #4ade80;
     }
 
-    /* Metrics (if used elsewhere) */
+    /* Metrics */
     .metric-card > div {
         border-radius: 10px !important;
         border: 1px solid #1f2937 !important;
@@ -192,6 +184,34 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+# Helper to style bar charts consistently (green, dark theme)
+def style_dark_bar(fig, height=240):
+    fig.update_traces(
+        marker_color="#22c55e",
+        marker_line_color="#15803d",
+        marker_line_width=1,
+    )
+    fig.update_layout(
+        height=height,
+        margin=dict(l=10, r=10, t=10, b=10),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(15,23,42,1)",
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            title="",
+            tickfont=dict(color="#9ca3af"),
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#0f172a",
+            zeroline=False,
+            title="",
+            tickfont=dict(color="#9ca3af"),
+        ),
+    )
+    return fig
 
 # ---------- TOP BAR ----------
 st.markdown(
@@ -366,7 +386,6 @@ total_inflow = df.loc[df["SignedAmount"] > 0, "SignedAmount"].sum()
 total_outflow = df.loc[df["SignedAmount"] < 0, "SignedAmount"].sum()
 savings_total = total_inflow + total_outflow
 
-# Month column for all further grouping
 df["Month"] = df["Date"].dt.strftime("%Y-%m")
 
 monthly_inflow = df[df["SignedAmount"] > 0].groupby("Month")["SignedAmount"].sum()
@@ -401,7 +420,7 @@ tab_dash, tab_upi, tab_emi, tab_predict, tab_export = st.tabs(
 
 # ===== OVERVIEW TAB =====
 with tab_dash:
-    # --- derive monthly numbers for snapshot ---
+    # --- derive snapshot numbers ---
     if len(monthly_df) > 0:
         current_row = monthly_df.iloc[-1]
         current_month_label = current_row["Month"]
@@ -414,7 +433,6 @@ with tab_dash:
         else:
             growth_txt = "first month in data"
 
-        # UPI net outflow (current month)
         if not upi_df.empty:
             upi_current = upi_df[upi_df["Month"] == current_month_label]
             upi_net = upi_current["SignedAmount"].sum()
@@ -422,7 +440,6 @@ with tab_dash:
         else:
             upi_net_out = 0
 
-        # EMI load (current month)
         if not emi_df.empty:
             emi_current = emi_df[emi_df["Month"] == current_month_label]
             emi_load = abs(emi_current["SignedAmount"].sum()) if not emi_current.empty else 0
@@ -436,44 +453,36 @@ with tab_dash:
         upi_net_out = 0
         emi_load = 0
         safe_daily = 0
-        current_month_label = ""
 
-    # --- snapshot UI ---
-    st.markdown(
-        f"""
-        <div class="snapshot-wrapper">
-          <div class="snapshot-header">
-            <div class="snapshot-title">Monthly savings snapshot</div>
-            <div class="snapshot-pill">Demo view</div>
-          </div>
-
-          <div class="snapshot-cards">
-            <div class="snapshot-card">
-              <div class="snapshot-label">This month savings</div>
-              <div class="snapshot-value">₹{this_savings:,.0f}</div>
-              <div class="snapshot-subtext">{growth_txt}</div>
-            </div>
-
-            <div class="snapshot-card">
-              <div class="snapshot-label">UPI net outflow</div>
-              <div class="snapshot-value">₹{upi_net_out:,.0f}</div>
-              <div class="snapshot-subtext">Top UPI spends: Swiggy · Amazon · Rent</div>
-            </div>
-
-            <div class="snapshot-card">
-              <div class="snapshot-label">EMI load</div>
-              <div class="snapshot-value">₹{emi_load:,.0f}</div>
-              <div class="snapshot-subtext">Current month EMIs and loans</div>
-            </div>
-          </div>
-
-          <div class="snapshot-ai">
-            AI view: <span>you can safely spend ~₹{safe_daily:,.0f}/day for the next 30 days</span>
-            &nbsp;based on this month’s savings.
-          </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    snapshot_html = f"""
+    <div class="snapshot-wrapper">
+      <div class="snapshot-header">
+        <div class="snapshot-title">Monthly savings snapshot</div>
+      </div>
+      <div class="snapshot-cards">
+        <div class="snapshot-card">
+          <div class="snapshot-label">This month savings</div>
+          <div class="snapshot-value">₹{this_savings:,.0f}</div>
+          <div class="snapshot-subtext">{growth_txt}</div>
+        </div>
+        <div class="snapshot-card">
+          <div class="snapshot-label">UPI net outflow</div>
+          <div class="snapshot-value">₹{upi_net_out:,.0f}</div>
+          <div class="snapshot-subtext">Top UPI spends: Swiggy · Amazon · Rent</div>
+        </div>
+        <div class="snapshot-card">
+          <div class="snapshot-label">EMI load</div>
+          <div class="snapshot-value">₹{emi_load:,.0f}</div>
+          <div class="snapshot-subtext">Current month EMIs and loans</div>
+        </div>
+      </div>
+      <div class="snapshot-ai">
+        AI view: <span>you can safely spend ~₹{safe_daily:,.0f}/day for the next 30 days</span>
+        &nbsp;based on this month’s savings.
+      </div>
+    </div>
+    """
+    st.markdown(snapshot_html, unsafe_allow_html=True)
 
     # --- Savings bar chart: last few months ---
     last_n = 4
@@ -483,30 +492,8 @@ with tab_dash:
         fig_hist.add_bar(
             x=snapshot_hist["Month"],
             y=snapshot_hist["Savings"],
-            marker=dict(
-                color="#22c55e",
-                line=dict(color="#15803d", width=1),
-            ),
         )
-        fig_hist.update_layout(
-            height=240,
-            margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(15,23,42,1)",
-            xaxis=dict(
-                showgrid=False,
-                zeroline=False,
-                title="",
-                tickfont=dict(color="#9ca3af"),
-            ),
-            yaxis=dict(
-                showgrid=True,
-                gridcolor="#0f172a",
-                zeroline=False,
-                title="",
-                tickfont=dict(color="#9ca3af"),
-            ),
-        )
+        fig_hist = style_dark_bar(fig_hist, height=220)
 
         st.markdown(
             """
@@ -518,9 +505,6 @@ with tab_dash:
         )
         st.plotly_chart(fig_hist, use_container_width=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)  # closes snapshot-wrapper
-
-    # Compact recent transactions table
     st.markdown(
         '<div class="cr-section-title" style="margin-top:10px;">Recent transactions</div>',
         unsafe_allow_html=True,
@@ -564,6 +548,7 @@ with tab_upi:
                 y="Description",
                 orientation="h",
             )
+            fig_upi = style_dark_bar(fig_upi, height=280)
             st.plotly_chart(fig_upi, use_container_width=True)
         with col_table:
             st.dataframe(
@@ -614,6 +599,7 @@ with tab_emi:
                 y="Description",
                 orientation="h",
             )
+            fig_emi_desc = style_dark_bar(fig_emi_desc, height=280)
             st.plotly_chart(fig_emi_desc, use_container_width=True)
         with col_table:
             st.dataframe(emi_by_desc, use_container_width=True)
@@ -625,6 +611,7 @@ with tab_emi:
             x="Month",
             y="Total EMI (₹)",
         )
+        fig_emi_month = style_dark_bar(fig_emi_month, height=260)
         st.plotly_chart(fig_emi_month, use_container_width=True)
 
 # ===== PREDICT TAB =====
@@ -667,6 +654,7 @@ with tab_predict:
                         y=monthly_series.values,
                         mode="lines+markers",
                         name="History",
+                        line=dict(color="#22c55e"),
                     )
                 )
                 fig_forecast.add_trace(
@@ -675,10 +663,12 @@ with tab_predict:
                         y=forecast,
                         mode="lines+markers",
                         name="Forecast",
+                        line=dict(color="#a855f7"),
                     )
                 )
                 fig_forecast.update_layout(
-                    margin=dict(l=0, r=0, t=30, b=0),
+                    height=260,
+                    margin=dict(l=10, r=10, t=30, b=0),
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(15,23,42,1)",
                     xaxis=dict(tickfont=dict(color="#9ca3af")),
@@ -706,6 +696,7 @@ with tab_predict:
         y="Savings",
         labels={"Month": "Month", "Savings": "Savings (₹)"},
     )
+    fig_month = style_dark_bar(fig_month, height=260)
     st.plotly_chart(fig_month, use_container_width=True)
 
     st.dataframe(
