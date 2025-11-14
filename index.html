@@ -2,92 +2,345 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CashRaaga — Bank Statement Analyzer for UPI, EMIs & Monthly Savings (India)</title>
+<title>CashRaaga — See Your Cashflow Before It Happens</title>
 
-<meta name="description" content="Analyze your bank statement instantly. CashRaaga extracts UPI flows, EMI payments, spending categories, monthly savings, and predicts next month’s cashflow. 100% private, no account needed.">
-
-<meta name="keywords" content="bank statement analyzer, india finance tool, UPI analysis, EMI tracker, savings calculator india, personal finance app india, cashflow tool india, financial planner india">
-<meta name="author" content="CashRaaga">
-
+<meta name="description" content="CashRaaga turns your bank statement into a clean snapshot of UPI flows, EMIs and monthly savings. Private, minimal, built for Indian bank statements.">
+<meta name="keywords" content="CashRaaga, bank statement analyzer, UPI analysis, EMI tracker, savings india, cashflow tool">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Open Graph -->
-<meta property="og:title" content="CashRaaga — Your Personal Cashflow Radar">
-<meta property="og:description" content="Upload your bank statement and instantly see UPI spends, EMI load, monthly savings and AI predictions. No login, no data upload.">
+<meta property="og:title" content="CashRaaga — Personal Cashflow Radar">
+<meta property="og:description" content="Upload your bank statement and instantly see UPI spends, EMI load and monthly savings. No login, no data upload.">
 <meta property="og:image" content="https://cashraaga.com/preview.png">
 <meta property="og:url" content="https://cashraaga.com">
 <meta property="og:type" content="website">
 
-<!-- Twitter Cards -->
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CashRaaga — Bank Statement Analyzer (India)">
-<meta name="twitter:description" content="UPI breakdown, EMIs, savings insights & predictions. 100% private.">
+<meta name="twitter:title" content="CashRaaga — Bank Statement Analyzer">
+<meta name="twitter:description" content="Minimal cashflow dashboard for UPI, EMIs and savings in India.">
 <meta name="twitter:image" content="https://cashraaga.com/preview.png">
 
-<!-- Schema.org JSON-LD -->
+<!-- Simple JSON-LD -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org/",
-  "@type": "FinancialService",
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
   "name": "CashRaaga",
-  "url": "https://cashraaga.com",
-  "logo": "https://cashraaga.com/logo.png",
-  "description": "Bank statement analyzer for UPI flows, EMIs, spending categories and monthly savings with AI predictions.",
-  "knowsAbout": ["UPI analysis", "EMI tracker", "bank statement parsing", "cashflow forecasting"],
-  "areaServed": "India",
   "applicationCategory": "FinanceApplication",
-  "operatingSystem": "Web"
+  "operatingSystem": "Web",
+  "url": "https://cashraaga.com",
+  "description": "Minimal bank-statement analyzer for UPI, EMIs and monthly savings.",
+  "areaServed": "IN"
 }
 </script>
 
 <style>
-body { font-family: Arial, sans-serif; color:#eee; background:#0d1117; margin:0; padding:0; }
-.hero { max-width:950px; margin:80px auto; padding:20px; text-align:center; }
-h1 { font-size:2.4rem; color:#4ade80; font-weight:700; }
-p { font-size:1.1rem; line-height:1.7; color:#cbd5e1; }
-.button { margin-top:25px; display:inline-block; padding:14px 26px; font-size:1.1rem; border-radius:12px; background:#22c55e; color:#04120a; font-weight:bold; text-decoration:none; }
-.section { max-width:900px; margin:60px auto; padding:20px; }
-h2 { color:#4ade80; font-size:1.6rem; }
-.feature-box { background:#0f172a; padding:18px; border-radius:14px; border:1px solid #1e293b; margin-bottom:16px; }
-footer { text-align:center; padding:20px; color:#334155; margin-top:40px; }
+  :root {
+    --bg: #020617;
+    --bg-elevated: #020617;
+    --border-subtle: #1f2937;
+    --accent: #22c55e;
+    --accent-soft: #22c55e20;
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --pill-bg: #020617;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden; /* no scrolling */
+  }
+  .layout {
+    display: flex;
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  /* LEFT SIDEBAR */
+  .sidebar {
+    width: 240px;
+    border-right: 1px solid var(--border-subtle);
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .brand-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .brand-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .nav-link {
+    font-size: 0.85rem;
+    padding: 6px 0;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .nav-link:hover {
+    color: var(--accent);
+  }
+  .nav-link.primary {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .side-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: auto;
+    line-height: 1.5;
+  }
+  .side-note span {
+    color: var(--accent);
+  }
+
+  /* RIGHT PANEL */
+  .main {
+    flex: 1;
+    padding: 24px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-card {
+    width: 100%;
+    max-width: 620px;
+    border-radius: 22px;
+    border: 1px solid #022c22;
+    background: radial-gradient(circle at top left, #022c22 0, #020617 55%, #020617 100%);
+    box-shadow: 0 24px 50px rgba(15,23,42,0.85);
+    padding: 20px 22px 18px 22px;
+  }
+  .hero-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 22px;
+  }
+  .hero-main {
+    flex: 1.4;
+  }
+  .hero-side {
+    flex: 1;
+  }
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .hero-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .hero-tagline {
+    font-size: 0.9rem;
+    color: #cbd5f5;
+    margin-bottom: 12px;
+  }
+  .launch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #022c22;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+  }
+  .launch-btn span {
+    font-size: 1rem;
+  }
+
+  .meta-line {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #1f2937;
+    background: var(--pill-bg);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .pill strong {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .mini-rows {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .mini-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .mini-row span.value {
+    color: var(--text-main);
+    font-weight: 500;
+  }
+
+  @media (max-width: 860px) {
+    body {
+      overflow: auto; /* allow scroll on very small screens */
+    }
+    .layout {
+      flex-direction: column;
+      height: auto;
+    }
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      border-right: none;
+      border-bottom: 1px solid var(--border-subtle);
+      justify-content: space-between;
+    }
+    .side-note {
+      display: none;
+    }
+    .main {
+      padding: 18px;
+    }
+    .hero-card {
+      margin-top: 10px;
+    }
+    .hero-row {
+      flex-direction: column;
+    }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="hero">
-  <h1>Your Cashflow Before It Happens</h1>
-  <p>Upload your bank statement and instantly see UPI inflows/outflows, EMI load, spending categories, monthly savings, and next-month predictions — all inside your device. No login, no server upload.</p>
-  <a class="button" href="https://app-cashraaga.streamlit.app/">Launch CashRaaga App</a>
+<div class="layout">
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo">₹</div>
+        <div>
+          <div class="brand-title">CashRaaga</div>
+          <div class="brand-sub">Personal cashflow radar</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-link primary" href="/">Home</a>
+        <a class="nav-link" href="how-it-works.html">How it works</a>
+        <a class="nav-link" href="privacy.html">Privacy</a>
+        <a class="nav-link" href="https://app-cashraaga.streamlit.app/" target="_blank">Launch app ↗</a>
+      </nav>
+    </div>
+
+    <div class="side-note">
+      Files are processed <span>locally</span> in your browser.  
+      Close the tab, clear the data.
+    </div>
+  </aside>
+
+  <!-- RIGHT: HERO PANEL -->
+  <main class="main">
+    <div class="hero-card">
+      <div class="hero-row">
+        <div class="hero-main">
+          <div class="hero-eyebrow">Bank statement → one clean snapshot</div>
+          <div class="hero-title">See your cashflow before it happens.</div>
+          <div class="hero-tagline">
+            Upload a CSV or Excel bank statement and get instant UPI, EMI and savings insight — without creating an account.
+          </div>
+
+          <a class="launch-btn" href="https://cashraaga-bzf2fjdyzkjchjmsd4s5tl.streamlit.app/" target="_blank">
+            <span>▶</span> Launch CashRaaga
+          </a>
+          <div class="meta-line">
+            Works best with Indian bank exports (CSV / XLSX).
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="pill-row">
+            <div class="pill"><strong>UPI flows</strong> at a glance</div>
+            <div class="pill"><strong>EMI load</strong> per month</div>
+            <div class="pill"><strong>Savings line</strong> from past months</div>
+          </div>
+
+          <div class="mini-rows">
+            <div class="mini-row">
+              <span>Example: this month savings</span>
+              <span class="value">₹ 24,300</span>
+            </div>
+            <div class="mini-row">
+              <span>UPI net outflow</span>
+              <span class="value">₹ 8,750</span>
+            </div>
+            <div class="mini-row">
+              <span>EMI load</span>
+              <span class="value">₹ 12,000</span>
+            </div>
+            <div class="mini-row">
+              <span>Safe daily spend signal</span>
+              <span class="value">₹ 800 / day</span>
+            </div>
+          </div>
+
+          <div class="meta-line" style="margin-top:8px;">
+            Numbers above are illustrative. Actual values come from your statement.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
-
-<div class="section">
-  <h2>Why CashRaaga?</h2>
-
-  <div class="feature-box">
-    <strong>• Understand your money</strong> — see where every rupee goes (UPI, EMI, shopping, dining, utilities)
-  </div>
-
-  <div class="feature-box">
-    <strong>• See monthly savings clearly</strong> — stop guessing how much you save
-  </div>
-
-  <div class="feature-box">
-    <strong>• Forecast next month</strong> — AI predicts your upcoming savings based on historical patterns
-  </div>
-
-  <div class="feature-box">
-    <strong>• 100% Private</strong> — everything runs locally in your browser, nothing is uploaded to a server
-  </div>
-
-  <div class="feature-box">
-    <strong>• Built for India</strong> — supports UPI descriptions, EMI formats, and common bank CSV layouts
-  </div>
-</div>
-
-<footer>
-  © 2025 CashRaaga · <a href="privacy.html">Privacy</a> · <a href="how-it-works.html">How It Works</a>
-</footer>
 
 </body>
 </html>
