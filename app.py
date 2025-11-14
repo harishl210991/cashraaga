@@ -54,6 +54,7 @@ with st.sidebar:
     st.markdown("---")
     st.caption("No login. Statements are processed in memory and not stored long-term.")
 
+# ================== TITLE ==================
 st.markdown(
     "<div class='main-title'>CashRaaga</div>",
     unsafe_allow_html=True
@@ -123,24 +124,24 @@ df["Amount_raw"] = df_raw[amount_col]
 df["Amount"] = pd.to_numeric(df["Amount_raw"], errors="coerce")
 df = df.dropna(subset=["Amount"])
 
-# auto-detect sign logic
+# sign logic
 if use_type_col and type_col is not None:
     tseries = df_raw[type_col].astype(str).str.upper().str.strip()
     credit_flag = tseries == type_value_credit.strip().upper()
     debit_flag = tseries == type_value_debit.strip().upper()
 
     if df["Amount"].min() >= 0:
-        # All positive -> rely on CR/DR
+        # all positive → rely only on CR/DR
         df["SignedAmount"] = 0.0
         df.loc[credit_flag, "SignedAmount"] = df.loc[credit_flag, "Amount"]
         df.loc[debit_flag, "SignedAmount"] = -df.loc[debit_flag, "Amount"]
     else:
-        # Amount already signed
+        # amounts already signed
         df["SignedAmount"] = df["Amount"]
 else:
     df["SignedAmount"] = df["Amount"]
 
-# parse dates and drop invalid
+# clean dates
 df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
 df = df.dropna(subset=["Date"])
 
@@ -178,10 +179,10 @@ def categorize(description: str) -> str:
 
 df["Category"] = df["Description"].apply(categorize)
 
-# common aggregates
+# aggregates
 total_inflow = df.loc[df["SignedAmount"] > 0, "SignedAmount"].sum()
 total_outflow = df.loc[df["SignedAmount"] < 0, "SignedAmount"].sum()
-savings_total = total_inflow + total_outflow  # outflow negative
+savings_total = total_inflow + total_outflow  # outflow is negative
 
 # monthly breakdown
 df["Month"] = df["Date"].dt.strftime("%Y-%m")
@@ -345,7 +346,7 @@ with tab_emi:
         fig_emi_month = px.bar(
             emi_monthly,
             x="Month",
-            y("Total EMI (Rs)"),
+            y="Total EMI (Rs)",
             title="Monthly EMI outflow"
         )
         st.plotly_chart(fig_emi_month, use_container_width=True)
